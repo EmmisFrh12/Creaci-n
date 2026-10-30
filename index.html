@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>creación</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --paper: #f5f1e8;
+  --panel: #ebe5d9;
+  --ink: #25231f;
+  --muted: #777168;
+  --line: #d5cec1;
+  --accent: #fa3730;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+aside {
+  z-index: 2;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 26px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  overflow-y: auto;
+}
+
+.brand {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -1.7px;
+}
+
+.brand span { color: var(--accent); }
+
+.subtitle {
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 1.7px;
+  color: var(--muted);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.intro {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #5e5950;
+  max-width: 235px;
+}
+
+.section-label {
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.shape-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+button {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.28);
+  color: var(--ink);
+  font: 12px "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+
+button:hover { border-color: #aaa092; }
+button:active { transform: translateY(1px); }
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-align: left;
+  padding: 11px 12px;
+  min-height: 42px;
+}
+
+.tool.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.tool .key {
+  margin-left: auto;
+  font: 10px "DM Mono", monospace;
+  opacity: .65;
+}
+
+.tool-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.shape {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  padding: 10px 10px;
+  min-height: 40px;
+}
+
+.palette {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+}
+
+.swatch.active {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.sound-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.toggle { padding: 8px 12px; }
+
+.toggle.on {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.action { padding: 11px 8px; }
+
+.action.primary {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.hint {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.spacer { flex: 1; min-height: 4px; }
+
+.status {
+  font: 10px "DM Mono", monospace;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+}
+
+/* ---- Botón de generación automática ---- */
+.random-btn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.random-btn:hover {
+  background: #34312b;
+  border-color: var(--accent);
+}
+
+.random-btn .key {
+  margin-left: auto;
+  font: 10px "DM Mono", monospace;
+  opacity: .6;
+}
+
+.random-note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin-top: 9px;
+}
+
+/* ---- Selector de color ---- */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.picker-main {
+  display: flex;
+  gap: 10px;
+  height: 150px;
+}
+
+.sv-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  cursor: crosshair;
+  touch-action: none;
+  border: 1px solid var(--line);
+  background-color: hsl(0, 100%, 50%);
+  background-image:
+    linear-gradient(to top, #000, rgba(0,0,0,0)),
+    linear-gradient(to right, #fff, rgba(255,255,255,0));
+}
+
+.sv-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.45), inset 0 0 0 1px rgba(0,0,0,.25);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hue-bar {
+  position: relative;
+  width: 20px;
+  cursor: pointer;
+  touch-action: none;
+  border: 1px solid var(--line);
+  background: linear-gradient(to bottom,
+    #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+}
+
+.hue-handle {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 6px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.45);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.picker-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.color-preview {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+}
+
+#hexInput {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.4);
+  color: var(--ink);
+  font: 12px "DM Mono", monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+#hexInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+#viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.top-note {
+  position: absolute;
+  left: 25px;
+  top: 23px;
+  z-index: 1;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 1.1px;
+  color: #8a8379;
+  pointer-events: none;
+}
+
+.bottom-note {
+  position: absolute;
+  bottom: 20px;
+  left: 25px;
+  right: 25px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: .4px;
+  color: #8a8379;
+  pointer-events: none;
+}
+
+#toast {
+  position: absolute;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: white;
+  padding: 9px 13px;
+  font: 11px "DM Mono", monospace;
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#toast.show { opacity: 1; }
+
+/* ---- Estilos para el Modal Pop-up Polaroid ---- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 15, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.polaroid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform: scale(0.9) rotate(-1.5deg);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.show .polaroid-wrapper {
+  transform: scale(1) rotate(-1.5deg);
+}
+
+.polaroid-card {
+  background: #faf8f5;
+  padding: 16px 16px 24px 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 2px 6px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  width: 310px;
+  text-align: center;
+  position: relative;
+}
+
+.polaroid-img-container {
+  width: 100%;
+  height: 270px;
+  background: #eee;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.polaroid-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.polaroid-caption {
+  font-family: 'Caveat', cursive;
+  font-size: 28px;
+  color: #2b2824;
+  margin-top: 18px;
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.download-btn {
+  flex: 1;
+  background: var(--ink);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  font: 12px "DM Sans", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.download-btn:hover {
+  background: var(--accent);
+}
+
+.close-btn {
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 12px 16px;
+  font: 12px "DM Sans", sans-serif;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: #f0ebe1;
+}
+
+@media (max-width: 760px) {
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  aside {
+    padding: 15px 16px;
+    gap: 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    max-height: 44vh;
+  }
+
+  .brand { font-size: 23px; }
+  .picker-main { height: 110px; }
+  .intro { display: none; }
+  .tool-grid { grid-template-columns: repeat(3, 1fr); }
+  .shape-grid { grid-template-columns: repeat(4, 1fr); }
+
+  .tool {
+    padding: 8px 4px;
+    gap: 5px;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .shape {
+    padding: 8px 4px;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .shape .tool-icon { display: none; }
+
+  .tool .key { display: none; }
+  .tool-icon { width: auto; }
+  .spacer, .status { display: none; }
+  #stage { min-height: 0; }
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <aside>
+    <header>
+      <div class="brand">crea<span>ción</span></div>
+      <div class="subtitle">da tu visión, haz algo tuyo</div>
+    </header>
+
+    <div class="intro">
+ Arrastra sobre la plastilina para moldearla.<br>
+      Con Mover, arrastra una pieza; con Shift se desliza por el suelo.<br>
+      Con Escalar, arrastra hacia arriba para agrandar y hacia abajo para reducir.<br>
+      Con Rotar, arrastra para girar la pieza; con Shift gira sobre sí misma.<br>
+      Con Eliminar, haz clic en una pieza para quitarla (puedes deshacerlo).<br>
+      Clic derecho + arrastrar para girar la vista.<br>
+      Rueda del ratón para acercar o alejar.
+    </div>
+
+    <section>
+      <div class="section-label">Herramientas</div>
+      <div class="tool-grid">
+        <button class="tool active" data-tool="press">
+          <span class="tool-icon">◉</span> Presionar <span class="key">1</span>
+        </button>
+
+        <button class="tool" data-tool="stretch">
+          <span class="tool-icon">↗</span> Estirar <span class="key">2</span>
+        </button>
+
+        <button class="tool" data-tool="smooth">
+          <span class="tool-icon">≈</span> Suavizar <span class="key">3</span>
+        </button>
+
+        <button class="tool" data-tool="move">
+          <span class="tool-icon">✥</span> Mover <span class="key">4</span>
+        </button>
+
+        <button class="tool" data-tool="scale">
+          <span class="tool-icon">⤢</span> Escalar <span class="key">5</span>
+        </button>
+
+        <button class="tool" data-tool="rotate">
+          <span class="tool-icon">↻</span> Rotar <span class="key">6</span>
+        </button>
+
+        <button class="tool" data-tool="delete">
+          <span class="tool-icon">✕</span> Eliminar <span class="key">7</span>
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Añadir forma</div>
+      <div class="shape-grid">
+        <button class="shape" data-shape="sphere">
+          <span class="tool-icon">●</span> Esfera
+        </button>
+
+        <button class="shape" data-shape="cube">
+          <span class="tool-icon">■</span> Cubo
+        </button>
+
+        <button class="shape" data-shape="rect">
+          <span class="tool-icon">▬</span> Rectángulo
+        </button>
+
+        <button class="shape" data-shape="triangle">
+          <span class="tool-icon">▲</span> Triángulo
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Creación automática</div>
+
+      <button id="randomBtn" class="random-btn">
+        <span class="tool-icon">⚄</span> Generar al azar <span class="key">R</span>
+      </button>
+
+      <div class="random-note">
+        Un clic, una pieza nueva. Compárala con la que tú hiciste.
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Color del material</div>
+
+      <div class="picker">
+        <div class="picker-main">
+          <div id="svArea" class="sv-area">
+            <div id="svHandle" class="sv-handle"></div>
+          </div>
+
+          <div id="hueBar" class="hue-bar">
+            <div id="hueHandle" class="hue-handle"></div>
+          </div>
+        </div>
+
+        <div class="picker-row">
+          <div id="colorPreview" class="color-preview"></div>
+          <input id="hexInput" type="text" maxlength="7"
+            spellcheck="false" autocomplete="off"
+            aria-label="Color en hexadecimal">
+        </div>
+      </div>
+
+      <div class="palette">
+        <button class="swatch active" data-color="#fa3730"
+          style="background:#fa3730" aria-label="Terracota"></button>
+
+        <button class="swatch" data-color="#e8b44f"
+          style="background:#e8b44f" aria-label="Amarillo"></button>
+
+        <button class="swatch" data-color="#759b87"
+          style="background:#759b87" aria-label="Verde"></button>
+
+        <button class="swatch" data-color="#7898b8"
+          style="background:#7898b8" aria-label="Azul"></button>
+
+        <button class="swatch" data-color="#b48bb8"
+          style="background:#b48bb8" aria-label="Lila"></button>
+
+        <button class="swatch" data-color="#e78d9c"
+          style="background:#e78d9c" aria-label="Rosa"></button>
+      </div>
+    </section>
+
+    <section>
+      <div class="sound-row">
+        <span>Sonido interactivo</span>
+        <button id="soundBtn" class="toggle">Activar</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Tu proceso</div>
+
+      <div class="actions">
+        <button id="undoBtn" class="action">↶ Deshacer</button>
+        <button id="resetBtn" class="action">Reiniciar</button>
+
+        <button id="captureBtn" class="action primary"
+          style="grid-column:1 / -1">Guardar imagen ↗</button>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <div class="hint">
+    </div>
+
+    <div class="status" id="status">
+    </div>
+  </aside>
+
+  <main id="stage">
+    <div class="top-note"></div>
+    <canvas id="viewport"></canvas>
+
+    <div class="bottom-note">
+      <span>ver 7</span>
+
+    </div>
+
+    <div id="toast"></div>
+  </main>
+</div>
+
+<!-- Ventana Modal Pop-up Polaroid -->
+<div id="polaroidModal" class="modal-backdrop">
+  <div class="polaroid-wrapper">
+    <div class="polaroid-card">
+      <div class="polaroid-img-container">
+        <img id="polaroidImg" src="" alt="Tu visión">
+      </div>
+      <div class="polaroid-caption">esta es tu visión</div>
+    </div>
+    <div class="modal-actions">
+      <button id="confirmDownloadBtn" class="download-btn">Descargar imagen</button>
+      <button id="closeModalBtn" class="close-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const canvas = document.querySelector('#viewport');
+const stage = document.querySelector('#stage');
+const statusEl = document.querySelector('#status');
+const toastEl = document.querySelector('#toast');
+
+// Modal Elements
+const polaroidModal = document.querySelector('#polaroidModal');
+const polaroidImg = document.querySelector('#polaroidImg');
+const confirmDownloadBtn = document.querySelector('#confirmDownloadBtn');
+const closeModalBtn = document.querySelector('#closeModalBtn');
+
+let currentDataUrl = '';
+
+let scene, camera, renderer, controls;
+let activeTool = 'press';
+let currentColor = '#fa3730';
+
+// Cada pieza: { type, mesh, material, neighbors, color }
+let pieces = [];
+let selectedPiece = null;   // la que recibe el cambio de color
+let activePiece = null;     // la que se está trabajando en este gesto
+const geometryCache = {};   // geometría base y vecindad por tipo de forma
+
+let sculpting = false;
+let activePointerId = null;
+let lastPointer = new THREE.Vector2();
+let sculptChanged = false;
+
+let audioContext = null;
+let masterGain = null;
+let noiseBuffer = null;
+let currentVoice = null;
+let soundEnabled = false;
+
+let toastTimer = null;
+let history = [];
+
+const MAX_HISTORY = 25;
+
+// Resolución de la malla de la esfera.
+const MESH_DETAIL = 18;
+
+// Límites de distancia al centro de cada pieza.
+const MIN_RADIUS = 0.18;
+const MAX_RADIUS = 3.4;
+
+// Altura del suelo: ninguna pieza lo atraviesa.
+const FLOOR_Y = -1.12;
+const FLOOR_GAP = 0.004;
+
+// Mitad del lado del área de trabajo (las piezas no salen de ella).
+const SCENE_LIMIT = 28;
+
+// Último punto de la plastilina que se estaba trabajando.
+let lastLocalHit = null;
+
+// Estado del arrastre con la herramienta Mover.
+const dragPlane = new THREE.Plane();
+const dragOffset = new THREE.Vector3();
+let dragHorizontal = false;
+let dragMinY = 0;
+
+// Estado del arrastre con la herramienta Escalar.
+let scaleBase = null;
+let scaleStartY = 0;
+let scaleBaseMaxR = 1;
+let scaleBaseMinY = 0;
+let scaleStartPosY = 0;
+let scaleResting = false;
+
+// Estado del arrastre con la herramienta Rotar.
+let rotBase = null;
+let rotStartX = 0;
+let rotStartY = 0;
+let rotBaseMinY = 0;
+let rotStartPosY = 0;
+let rotResting = false;
+let rotRoll = false;
+const rotRight = new THREE.Vector3();
+const rotForward = new THREE.Vector3();
+
+const SHAPE_NAMES = {
+  sphere: 'Esfera',
+  cube: 'Cubo',
+  rect: 'Rectángulo',
+  triangle: 'Triángulo'
+};
+
+const TOOL_LABELS = {
+  press: 'PRESIONAR',
+  stretch: 'ESTIRAR',
+  smooth: 'SUAVIZAR',
+  move: 'MOVER',
+  scale: 'ESCALAR',
+  rotate: 'ROTAR',
+  delete: 'ELIMINAR'
+};
+
+const raycaster = new THREE.Raycaster();
+const pointerNdc = new THREE.Vector2();
+
+// Elementos del selector de color.
+const svArea = document.querySelector('#svArea');
+const svHandle = document.querySelector('#svHandle');
+const hueBar = document.querySelector('#hueBar');
+const hueHandle = document.querySelector('#hueHandle');
+const hexInput = document.querySelector('#hexInput');
+const colorPreview = document.querySelector('#colorPreview');
+
+// Color actual en formato matiz / saturación / brillo.
+const picker = { h: 16, s: 0.69, v: 0.85 };
+
+// Animación de la cámara al encuadrar piezas nuevas.
+let cameraAnim = null;
+
+init();
+animate();
+
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color('#f5f1e8');
+
+  camera = new THREE.PerspectiveCamera(38, 1, 0.1, 250);
+  camera.position.set(0, 1.1, 5.6);
+
+  renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: false,
+    preserveDrawingBuffer: true
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.07;
+  controls.target.set(0, 0.25, 0);
+  controls.enablePan = false;
+  controls.minDistance = 3.1;
+  controls.maxDistance = 32;
+  controls.maxPolarAngle = Math.PI * 0.82;
+  controls.mouseButtons.LEFT = null;
+  controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+  controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
+
+  const hemi = new THREE.HemisphereLight('#fffaf1', '#b8a797', 2);
+  scene.add(hemi);
+
+  const keyLight = new THREE.DirectionalLight('#fff3e7', 3);
+  keyLight.position.set(-3.5, 5, 4);
+  keyLight.castShadow = true;
+  const shadowSize = Math.min(4096, renderer.capabilities.maxTextureSize);
+  keyLight.shadow.mapSize.set(shadowSize, shadowSize);
+  keyLight.shadow.camera.left = -SCENE_LIMIT;
+  keyLight.shadow.camera.right = SCENE_LIMIT;
+  keyLight.shadow.camera.top = SCENE_LIMIT;
+  keyLight.shadow.camera.bottom = -SCENE_LIMIT;
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far = 90;
+  keyLight.shadow.camera.updateProjectionMatrix();
+  keyLight.shadow.bias = -0.0002;
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight('#f3b9a1', 1);
+  fillLight.position.set(4, 2, -3);
+  scene.add(fillLight);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(200, 200),
+    new THREE.MeshStandardMaterial({
+      color: '#f5f1e8',
+      roughness: 1
+    })
+  );
+
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = FLOOR_Y;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  const stageDisc = new THREE.Mesh(
+    new THREE.CircleGeometry(SCENE_LIMIT + 4, 96),
+    new THREE.MeshStandardMaterial({
+      color: '#efe9dc',
+      roughness: 1,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1
+    })
+  );
+
+  stageDisc.rotation.x = -Math.PI / 2;
+  stageDisc.position.y = FLOOR_Y + 0.0015;
+  stageDisc.receiveShadow = true;
+  scene.add(stageDisc);
+
+  const shadowPlane = new THREE.Mesh(
+    new THREE.CircleGeometry(1.5, 64),
+    new THREE.ShadowMaterial({ opacity: 0.12 })
+  );
+
+  shadowPlane.rotation.x = -Math.PI / 2;
+  shadowPlane.position.y = -1.115;
+  shadowPlane.scale.set(1.1, 0.65, 1);
+  shadowPlane.receiveShadow = true;
+  scene.add(shadowPlane);
+
+  const first = createPiece('sphere', currentColor);
+  first.mesh.position.set(0, 0.12, 0);
+  selectPiece(first);
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+  document.querySelectorAll('.tool').forEach(button => {
+    button.addEventListener('click', () => setTool(button.dataset.tool));
+  });
+
+  document.querySelectorAll('.shape').forEach(button => {
+    button.addEventListener('click', () => addShape(button.dataset.shape));
+  });
+
+  initColorPicker();
+
+  document.querySelector('#randomBtn')
+    .addEventListener('click', generateRandomPiece);
+
+  document.querySelector('#undoBtn').addEventListener('click', undo);
+  document.querySelector('#resetBtn').addEventListener('click', resetClay);
+  document.querySelector('#captureBtn').addEventListener('click', captureImage);
+  document.querySelector('#soundBtn').addEventListener('click', toggleSound);
+
+  // Listeners para la Modal
+  closeModalBtn.addEventListener('click', hideModal);
+  confirmDownloadBtn.addEventListener('click', executeDownload);
+
+  window.addEventListener('keydown', e => {
+    if (
+      e.target instanceof HTMLInputElement ||
+      e.target instanceof HTMLTextAreaElement
+    ) return;
+
+    if (e.key === 'Escape' && polaroidModal.classList.contains('show')) {
+      hideModal();
+      return;
+    }
+
+    if (e.key === '1') setTool('press');
+    if (e.key === '2') setTool('stretch');
+    if (e.key === '3') setTool('smooth');
+    if (e.key === '4') setTool('move');
+    if (e.key === '5') setTool('scale');
+    if (e.key === '6') setTool('rotate');
+    if (e.key === '7') setTool('delete');
+
+    if (
+      e.key.toLowerCase() === 'r' &&
+      !e.ctrlKey && !e.metaKey && !e.altKey
+    ) {
+      generateRandomPiece();
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      undo();
+    }
+  });
+
+  showToast('Prueba movimientos pequeños y graduales');
+}
+
+function resize() {
+  if (!renderer || !camera) return;
+
+  const width = Math.max(1, stage.clientWidth);
+  const height = Math.max(1, stage.clientHeight);
+
+  renderer.setSize(width, height, false);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  updateSpawnAnimations();
+
+  if (cameraAnim) {
+    const t = Math.min(1, (performance.now() - cameraAnim.start) / cameraAnim.dur);
+    const e = 1 - Math.pow(1 - t, 3);
+
+    camera.position.lerpVectors(cameraAnim.from, cameraAnim.to, e);
+
+    if (t >= 1) cameraAnim = null;
+  }
+
+  if (controls) controls.update();
+  if (renderer && scene && camera) renderer.render(scene, camera);
+}
+
+function buildShape(type) {
+  if (geometryCache[type]) return geometryCache[type];
+
+  let g;
+
+  if (type === 'sphere') {
+    g = new THREE.IcosahedronGeometry(1, MESH_DETAIL);
+  } else if (type === 'cube') {
+    g = new THREE.BoxGeometry(1.5, 1.5, 1.5, 20, 20, 20);
+  } else if (type === 'rect') {
+    g = new THREE.BoxGeometry(2.4, 1.1, 1.1, 30, 14, 14);
+  } else if (type === 'triangle') {
+    const h = 1.8;
+    g = new THREE.BoxGeometry(2.0, h, 1.0, 24, 24, 12);
+
+    const pos = g.attributes.position;
+
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i);
+      const f = 0.06 + 0.94 * ((h / 2 - y) / h);
+      pos.setX(i, pos.getX(i) * f);
+    }
+  }
+
+  g.deleteAttribute('normal');
+  g.deleteAttribute('uv');
+
+  g = mergeVertices(g, 1e-4);
+
+  g.computeBoundingBox();
+  const center = new THREE.Vector3();
+  g.boundingBox.getCenter(center);
+  g.translate(-center.x, -center.y, -center.z);
+
+  g.computeVertexNormals();
+
+  geometryCache[type] = {
+    geometry: g,
+    neighbors: buildVertexNeighbors(g)
+  };
+
+  return geometryCache[type];
+}
+
+function createPiece(type, color) {
+  const shape = buildShape(type);
+
+  const geometry = shape.geometry.clone();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+
+  const material = new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.78,
+    metalness: 0,
+    flatShading: false
+  });
+
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+
+  const piece = {
+    type,
+    mesh,
+    material,
+    neighbors: shape.neighbors,
+    color
+  };
+
+  mesh.userData.piece = piece;
+
+  scene.add(mesh);
+  pieces.push(piece);
+
+  return piece;
+}
+
+function disposePiece(piece) {
+  scene.remove(piece.mesh);
+  piece.mesh.geometry.dispose();
+  piece.material.dispose();
+}
+
+function selectPiece(piece) {
+  selectedPiece = piece;
+
+  if (!piece) {
+    updateStatus();
+    return;
+  }
+
+  syncPicker(piece.color);
+
+  updateStatus();
+}
+
+function updateStatus() {
+  if (!pieces.length) {
+    statusEl.textContent =
+      `HERRAMIENTA: ${TOOL_LABELS[activeTool]} · SIN PIEZAS`;
+    return;
+  }
+
+  const index = Math.max(1, pieces.indexOf(selectedPiece) + 1);
+
+  const tail = pieces.length > 1
+    ? `PIEZA ${index}/${pieces.length}`
+    : 'MALLA ESTABLE';
+
+  statusEl.textContent = `HERRAMIENTA: ${TOOL_LABELS[activeTool]} · ${tail}`;
+}
+
+function findFreeSpot(newPiece) {
+  const nb = newPiece.mesh.geometry.boundingBox;
+  const halfW = (nb.max.x - nb.min.x) / 2;
+  const halfD = (nb.max.z - nb.min.z) / 2;
+
+  const boxes = pieces
+    .filter(p => p !== newPiece)
+    .map(p => {
+      p.mesh.geometry.computeBoundingBox();
+
+      return p.mesh.geometry.boundingBox
+        .clone()
+        .translate(p.mesh.position);
+    });
+
+  const xs = [0, 2.4, -2.4, 4.8, -4.8, 7.2, -7.2, 9.6, -9.6];
+  const zs = [0, -3, 3, -6, 6, -9, 9];
+  const margin = 0.2;
+
+  for (const z of zs) {
+    for (const x of xs) {
+      const overlaps = boxes.some(b => {
+        const cx = (b.min.x + b.max.x) / 2;
+        const cz = (b.min.z + b.max.z) / 2;
+        const bw = (b.max.x - b.min.x) / 2;
+        const bd = (b.max.z - b.min.z) / 2;
+
+        return (
+          Math.abs(x - cx) < halfW + bw + margin &&
+          Math.abs(z - cz) < halfD + bd + margin
+        );
+      });
+
+      if (!overlaps) return { x, z };
+    }
+  }
+
+  return { x: (Math.random() - 0.5) * 6, z: (Math.random() - 0.5) * 4 };
+}
+
+function addShape(type) {
+  saveHistory();
+
+  const piece = createPiece(type, currentColor);
+  const spot = findFreeSpot(piece);
+  const minY = piece.mesh.geometry.boundingBox.min.y;
+
+  piece.mesh.position.set(spot.x, FLOOR_Y + FLOOR_GAP - minY, spot.z);
+
+  selectPiece(piece);
+
+  showToast(`${SHAPE_NAMES[type]} añadida`);
+  playShapeSound(type);
+}
+
+function setTool(tool) {
+  activeTool = tool;
+
+  document.querySelectorAll('.tool').forEach(button => {
+    button.classList.toggle('active', button.dataset.tool === tool);
+  });
+
+  updateStatus();
+}
+
+function pointerToNdc(event) {
+  const rect = canvas.getBoundingClientRect();
+
+  pointerNdc.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  pointerNdc.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+}
+
+function getAnyHit(event) {
+  pointerToNdc(event);
+  raycaster.setFromCamera(pointerNdc, camera);
+
+  const hits = raycaster.intersectObjects(
+    pieces.map(p => p.mesh),
+    false
+  );
+
+  if (!hits.length) return null;
+
+  return { piece: hits[0].object.userData.piece, hit: hits[0] };
+}
+
+function getPieceHit(event, piece) {
+  pointerToNdc(event);
+  raycaster.setFromCamera(pointerNdc, camera);
+
+  const hits = raycaster.intersectObject(piece.mesh, false);
+  return hits.length ? hits[0] : null;
+}
+
+function setupDrag(point, horizontal) {
+  dragHorizontal = horizontal;
+
+  const normal = horizontal
+    ? new THREE.Vector3(0, 1, 0)
+    : camera.getWorldDirection(new THREE.Vector3());
+
+  dragPlane.setFromNormalAndCoplanarPoint(normal, point);
+  dragOffset.copy(point).sub(activePiece.mesh.position);
+}
+
+function moveActivePiece(event) {
+  if (event.shiftKey !== dragHorizontal) {
+    const grabPoint = activePiece.mesh.position.clone().add(dragOffset);
+    setupDrag(grabPoint, event.shiftKey);
+  }
+
+  pointerToNdc(event);
+  raycaster.setFromCamera(pointerNdc, camera);
+
+  const target = new THREE.Vector3();
+
+  if (!raycaster.ray.intersectPlane(dragPlane, target)) return;
+  if (target.length() > 90) return;
+
+  const mesh = activePiece.mesh;
+
+  mesh.position.copy(target.sub(dragOffset));
+  mesh.position.x = THREE.MathUtils.clamp(
+    mesh.position.x, -SCENE_LIMIT, SCENE_LIMIT
+  );
+  mesh.position.z = THREE.MathUtils.clamp(
+    mesh.position.z, -SCENE_LIMIT, SCENE_LIMIT
+  );
+  mesh.position.y = Math.max(
+    mesh.position.y,
+    FLOOR_Y + FLOOR_GAP - dragMinY
+  );
+}
+
+function scaleActivePiece(event) {
+  const raw = Math.exp((scaleStartY - event.clientY) * 0.006);
+
+  const minFactor = 0.35 / scaleBaseMaxR;
+  const maxFactor = MAX_RADIUS / scaleBaseMaxR;
+  const factor = THREE.MathUtils.clamp(raw, minFactor, maxFactor);
+
+  const mesh = activePiece.mesh;
+  const geometry = mesh.geometry;
+  const arr = geometry.attributes.position.array;
+
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = scaleBase[i] * factor;
+  }
+
+  geometry.attributes.position.needsUpdate = true;
+  geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+
+  const floorPosY = FLOOR_Y + FLOOR_GAP - scaleBaseMinY * factor;
+
+  mesh.position.y = scaleResting
+    ? floorPosY
+    : Math.max(scaleStartPosY, floorPosY);
+
+  return factor;
+}
+
+function rotateActivePiece(event) {
+  const dx = event.clientX - rotStartX;
+  const dy = event.clientY - rotStartY;
+
+  const q = new THREE.Quaternion();
+
+  if (rotRoll) {
+    q.setFromAxisAngle(rotForward, dx * 0.01);
+  } else {
+    const yaw = new THREE.Quaternion()
+      .setFromAxisAngle(new THREE.Vector3(0, 1, 0), dx * 0.01);
+
+    const pitch = new THREE.Quaternion()
+      .setFromAxisAngle(rotRight, dy * 0.01);
+
+    q.copy(pitch).multiply(yaw);
+  }
+
+  const mesh = activePiece.mesh;
+  const geometry = mesh.geometry;
+  const arr = geometry.attributes.position.array;
+
+  const v = new THREE.Vector3();
+  let minY = Infinity;
+
+  for (let i = 0; i < arr.length; i += 3) {
+    v.set(rotBase[i], rotBase[i + 1], rotBase[i + 2]).applyQuaternion(q);
+
+    arr[i] = v.x;
+    arr[i + 1] = v.y;
+    arr[i + 2] = v.z;
+
+    if (v.y < minY) minY = v.y;
+  }
+
+  geometry.attributes.position.needsUpdate = true;
+  geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+
+  const floorPosY = FLOOR_Y + FLOOR_GAP - minY;
+
+  mesh.position.y = rotResting
+    ? floorPosY
+    : Math.max(rotStartPosY, floorPosY);
+
+  return (dx + dy) * 0.01;
+}
+
+function deletePiece(piece) {
+  saveHistory();
+
+  scene.remove(piece.mesh);
+  pieces = pieces.filter(p => p !== piece);
+
+  selectPiece(pieces[pieces.length - 1] || null);
+
+  showToast('Pieza eliminada');
+  playShapeSound('delete');
+}
+
+function onPointerDown(event) {
+  if (event.button === 2 || event.button === 1) return;
+
+  const found = getAnyHit(event);
+  if (!found) return;
+
+  event.preventDefault();
+
+  const { piece, hit } = found;
+
+  if (activeTool === 'delete') {
+    deletePiece(piece);
+    return;
+  }
+
+  selectPiece(piece);
+  activePiece = piece;
+
+  sculpting = true;
+  activePointerId = event.pointerId;
+  sculptChanged = false;
+
+  lastPointer.set(event.clientX, event.clientY);
+  lastLocalHit = piece.mesh.worldToLocal(hit.point.clone());
+
+  saveHistory();
+
+  if (activeTool === 'move') {
+    piece.mesh.geometry.computeBoundingBox();
+    dragMinY = piece.mesh.geometry.boundingBox.min.y;
+    setupDrag(hit.point.clone(), event.shiftKey);
+  }
+
+  if (activeTool === 'scale') {
+    const arr = piece.mesh.geometry.attributes.position.array;
+
+    scaleBase = new Float32Array(arr);
+
+    let maxR2 = 0;
+    let minY = Infinity;
+
+    for (let i = 0; i < arr.length; i += 3) {
+      const r2 = arr[i] * arr[i] + arr[i + 1] * arr[i + 1] + arr[i + 2] * arr[i + 2];
+      if (r2 > maxR2) maxR2 = r2;
+      if (arr[i + 1] < minY) minY = arr[i + 1];
+    }
+
+    scaleBaseMaxR = Math.sqrt(maxR2);
+    scaleBaseMinY = minY;
+    scaleStartY = event.clientY;
+    scaleStartPosY = piece.mesh.position.y;
+    scaleResting =
+      (scaleStartPosY + minY) - (FLOOR_Y + FLOOR_GAP) < 0.03;
+  }
+
+  if (activeTool === 'rotate') {
+    const arr = piece.mesh.geometry.attributes.position.array;
+
+    rotBase = new Float32Array(arr);
+
+    let minY = Infinity;
+
+    for (let i = 1; i < arr.length; i += 3) {
+      if (arr[i] < minY) minY = arr[i];
+    }
+
+    rotBaseMinY = minY;
+    rotStartX = event.clientX;
+    rotStartY = event.clientY;
+    rotStartPosY = piece.mesh.position.y;
+    rotResting =
+      (rotStartPosY + minY) - (FLOOR_Y + FLOOR_GAP) < 0.03;
+    rotRoll = event.shiftKey;
+
+    rotRight.setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+    camera.getWorldDirection(rotForward);
+  }
+
+  controls.enabled = false;
+  canvas.setPointerCapture(event.pointerId);
+
+  if (soundEnabled) startToolSound();
+}
+
+function onPointerMove(event) {
+  if (!sculpting || event.pointerId !== activePointerId || !activePiece) return;
+
+  const piece = activePiece;
+
+  const dx = event.clientX - lastPointer.x;
+  const dy = event.clientY - lastPointer.y;
+  const screenDistance = Math.hypot(dx, dy);
+  const speed = Math.min(1, screenDistance / 18);
+
+  if (activeTool === 'move') {
+    moveActivePiece(event);
+
+    sculptChanged = true;
+    lastPointer.set(event.clientX, event.clientY);
+
+    updateToolSound(speed);
+    return;
+  }
+
+  if (activeTool === 'scale') {
+    const factor = scaleActivePiece(event);
+
+    sculptChanged = true;
+    lastPointer.set(event.clientX, event.clientY);
+
+    updateToolSound(speed, factor);
+    return;
+  }
+
+  if (activeTool === 'rotate') {
+    const angle = rotateActivePiece(event);
+
+    sculptChanged = true;
+    lastPointer.set(event.clientX, event.clientY);
+
+    updateToolSound(speed, angle);
+    return;
+  }
+
+  const hit = getPieceHit(event, piece);
+
+  if (!hit && !(activeTool === 'stretch' && lastLocalHit)) {
+    lastPointer.set(event.clientX, event.clientY);
+    return;
+  }
+
+  if (screenDistance < 0.2) return;
+
+  const localHit = hit
+    ? piece.mesh.worldToLocal(hit.point.clone())
+    : lastLocalHit.clone();
+
+  const localNormal = hit && hit.face
+    ? hit.face.normal.clone().normalize()
+    : localHit.clone().normalize();
+
+  const radius =
+    activeTool === 'smooth' ? 0.52 :
+    activeTool === 'stretch' ? 0.42 :
+    0.34;
+
+  if (activeTool === 'smooth') {
+    smoothSurface(
+      piece,
+      localHit,
+      radius,
+      Math.min(0.55, 0.35 + speed * 0.2),
+      2
+    );
+  } else {
+    let direction;
+
+    if (activeTool === 'press') {
+      direction = localNormal.clone().negate();
+
+      deformSurface(
+        piece,
+        localHit,
+        direction,
+        radius,
+        0.020 * Math.max(0.35, speed),
+        'press'
+      );
+    }
+
+    if (activeTool === 'stretch') {
+      const movement = new THREE.Vector3(dx, -dy, 0);
+      movement.applyQuaternion(camera.quaternion);
+
+      direction = movement.addScaledVector(
+        localNormal,
+        -movement.dot(localNormal)
+      );
+
+      if (direction.lengthSq() < 0.0001) {
+        direction = localNormal.clone();
+      }
+
+      direction.normalize();
+
+      const stretchAmount = THREE.MathUtils.clamp(
+        screenDistance * 0.0018,
+        0.012,
+        0.055
+      );
+
+      deformSurface(
+        piece,
+        localHit,
+        direction,
+        radius,
+        stretchAmount,
+        'stretch'
+      );
+
+      lastLocalHit = hit
+        ? localHit.clone()
+        : localHit.clone().addScaledVector(direction, stretchAmount);
+    }
+  }
+
+  const geometry = piece.mesh.geometry;
+
+  geometry.attributes.position.needsUpdate = true;
+  geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+
+  sculptChanged = true;
+  lastPointer.set(event.clientX, event.clientY);
+
+  updateToolSound(speed);
+}
+
+function onPointerUp(event) {
+  if (
+    !sculpting ||
+    (activePointerId !== null && event.pointerId !== activePointerId)
+  ) return;
+
+  sculpting = false;
+  activePointerId = null;
+  controls.enabled = true;
+
+  stopToolSound();
+
+  if (!sculptChanged && history.length) {
+    history.pop();
+  }
+
+  if (activePiece) activePiece.mesh.geometry.computeBoundingBox();
+
+  activePiece = null;
+  sculptChanged = false;
+}
+
+function deformSurface(piece, center, direction, radius, strength, mode) {
+  const positions = piece.mesh.geometry.attributes.position;
+  const arr = positions.array;
+
+  const maxStep = mode === 'stretch' ? 0.06 : 0.03;
+  const radiusSq = radius * radius;
+
+  const minY = FLOOR_Y + FLOOR_GAP - piece.mesh.position.y;
+
+  const p = new THREE.Vector3();
+
+  for (let i = 0; i < positions.count; i++) {
+    p.set(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2]);
+
+    if (p.distanceToSquared(center) >= radiusSq) continue;
+
+    const distance = p.distanceTo(center);
+    const t = 1 - distance / radius;
+
+    const falloff = t * t * (3 - 2 * t);
+
+    const amount = Math.min(strength * falloff, maxStep);
+
+    p.addScaledVector(direction, amount);
+
+    const length = p.length();
+
+    if (length > MAX_RADIUS) p.setLength(MAX_RADIUS);
+    if (length < MIN_RADIUS) p.setLength(MIN_RADIUS);
+
+    if (p.y < minY) p.y = minY;
+
+    positions.setXYZ(i, p.x, p.y, p.z);
+  }
+
+  positions.needsUpdate = true;
+}
+
+function buildVertexNeighbors(geometry) {
+  const position = geometry.attributes.position;
+  const index = geometry.index;
+
+  if (!index) {
+    console.warn('La geometría no tiene índice: el suavizado no funcionará.');
+    return Array.from({ length: position.count }, () => []);
+  }
+
+  const adjacency = Array.from(
+    { length: position.count },
+    () => new Set()
+  );
+
+  const idx = index.array;
+
+  for (let i = 0; i < idx.length; i += 3) {
+    const a = idx[i];
+    const b = idx[i + 1];
+    const c = idx[i + 2];
+
+    adjacency[a].add(b);
+    adjacency[a].add(c);
+
+    adjacency[b].add(a);
+    adjacency[b].add(c);
+
+    adjacency[c].add(a);
+    adjacency[c].add(b);
+  }
+
+  return adjacency.map(set => Array.from(set));
+}
+
+function smoothSurface(piece, center, radius, factor, iterations = 1) {
+  const positions = piece.mesh.geometry.attributes.position;
+  const neighborsList = piece.neighbors;
+  const count = positions.count;
+
+  if (!neighborsList.length) return;
+
+  const radiusSq = radius * radius;
+
+  const affected = [];
+  const weights = [];
+
+  const arr = positions.array;
+
+  for (let i = 0; i < count; i++) {
+    const dx = arr[i * 3] - center.x;
+    const dy = arr[i * 3 + 1] - center.y;
+    const dz = arr[i * 3 + 2] - center.z;
+    const dSq = dx * dx + dy * dy + dz * dz;
+
+    if (dSq >= radiusSq) continue;
+
+    const t = 1 - Math.sqrt(dSq) / radius;
+    const falloff = t * t * (3 - 2 * t);
+
+    affected.push(i);
+    weights.push(Math.min(0.6, factor * falloff));
+  }
+
+  if (!affected.length) return;
+
+  const p = new THREE.Vector3();
+  const avg = new THREE.Vector3();
+
+  for (let iter = 0; iter < iterations; iter++) {
+    const before = new Float32Array(positions.array);
+    const cur = positions.array;
+
+    for (let k = 0; k < affected.length; k++) {
+      const i = affected[k];
+      const neighbors = neighborsList[i];
+
+      if (!neighbors.length) continue;
+
+      avg.set(0, 0, 0);
+
+      for (let n = 0; n < neighbors.length; n++) {
+        const j = neighbors[n];
+        avg.x += before[j * 3];
+        avg.y += before[j * 3 + 1];
+        avg.z += before[j * 3 + 2];
+      }
+
+      avg.multiplyScalar(1 / neighbors.length);
+
+      p.set(before[i * 3], before[i * 3 + 1], before[i * 3 + 2]);
+      p.lerp(avg, weights[k]);
+
+      const len = p.length();
+
+      if (len > MAX_RADIUS) p.setLength(MAX_RADIUS);
+      if (len < MIN_RADIUS) p.setLength(MIN_RADIUS);
+
+      cur[i * 3] = p.x;
+      cur[i * 3 + 1] = p.y;
+      cur[i * 3 + 2] = p.z;
+    }
+  }
+
+  positions.needsUpdate = true;
+}
+
+function hsvToHex(h, s, v) {
+  const f = n => {
+    const k = (n + h / 60) % 6;
+    return v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
+  };
+
+  const to = x => Math.round(x * 255).toString(16).padStart(2, '0');
+
+  return `#${to(f(5))}${to(f(3))}${to(f(1))}`;
+}
+
+function hexToHsv(hex) {
+  const n = parseInt(hex.slice(1), 16);
+
+  const r = ((n >> 16) & 255) / 255;
+  const g = ((n >> 8) & 255) / 255;
+  const b = (n & 255) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+
+  let h = 0;
+
+  if (d > 0) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+
+  return { h, s: max === 0 ? 0 : d / max, v: max };
+}
+
+function renderPicker(hex) {
+  svArea.style.backgroundColor = `hsl(${picker.h}, 100%, 50%)`;
+
+  svHandle.style.left = `${picker.s * 100}%`;
+  svHandle.style.top = `${(1 - picker.v) * 100}%`;
+  hueHandle.style.top = `${(picker.h / 360) * 100}%`;
+
+  colorPreview.style.background = hex;
+
+  if (document.activeElement !== hexInput) {
+    hexInput.value = hex;
+  }
+
+  document.querySelectorAll('.swatch').forEach(b => {
+    b.classList.toggle(
+      'active',
+      b.dataset.color.toLowerCase() === hex.toLowerCase()
+    );
+  });
+}
+
+function syncPicker(hex) {
+  currentColor = hex;
+
+  const hsv = hexToHsv(hex);
+
+  if (hsv.s < 0.001) hsv.h = picker.h;
+
+  if (hsv.v < 0.001) {
+    hsv.h = picker.h;
+    hsv.s = picker.s;
+  }
+
+  Object.assign(picker, hsv);
+  renderPicker(hex);
+}
+
+function applyColor(hex) {
+  currentColor = hex;
+
+  if (selectedPiece) {
+    selectedPiece.color = hex;
+    selectedPiece.material.color.set(hex);
+  }
+
+  renderPicker(hex);
+}
+
+function pickerChanged() {
+  applyColor(hsvToHex(picker.h, picker.s, picker.v));
+}
+
+function bindDrag(element, onMove) {
+  element.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    element.setPointerCapture(e.pointerId);
+    onMove(e);
+  });
+
+  element.addEventListener('pointermove', e => {
+    if (element.hasPointerCapture(e.pointerId)) onMove(e);
+  });
+}
+
+function initColorPicker() {
+  bindDrag(svArea, e => {
+    const rect = svArea.getBoundingClientRect();
+
+    picker.s = THREE.MathUtils.clamp((e.clientX - rect.left) / rect.width, 0, 1);
+    picker.v = 1 - THREE.MathUtils.clamp((e.clientY - rect.top) / rect.height, 0, 1);
+
+    pickerChanged();
+  });
+
+  bindDrag(hueBar, e => {
+    const rect = hueBar.getBoundingClientRect();
+
+    picker.h = THREE.MathUtils.clamp((e.clientY - rect.top) / rect.height, 0, 1) * 360;
+
+    pickerChanged();
+  });
+
+  hexInput.addEventListener('input', () => {
+    let value = hexInput.value.trim();
+
+    if (!value.startsWith('#')) value = '#' + value;
+
+    if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+      const hex = value.toLowerCase();
+
+      syncPicker(hex);
+      applyColor(hex);
+    }
+  });
+
+  hexInput.addEventListener('blur', () => {
+    hexInput.value = currentColor;
+  });
+
+  document.querySelectorAll('.swatch').forEach(button => {
+    button.addEventListener('click', () => {
+      syncPicker(button.dataset.color);
+      applyColor(button.dataset.color);
+    });
+  });
+}
+
+function rand(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function pick(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function randomUnitVector() {
+  const v = new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1));
+
+  if (v.lengthSq() < 1e-4) v.set(0, 1, 0);
+
+  return v.normalize();
+}
+
+function generateRandomPiece() {
+  saveHistory();
+
+  const type = pick(['sphere', 'cube', 'rect', 'triangle']);
+  const color = hsvToHex(rand(0, 360), rand(0.35, 0.8), rand(0.7, 0.95));
+
+  const piece = createPiece(type, color);
+  const mesh = piece.mesh;
+  const geometry = mesh.geometry;
+  const position = geometry.attributes.position;
+  const arr = position.array;
+
+  mesh.position.set(0, 100, 0);
+
+  const sx = rand(0.7, 1.5);
+  const sy = rand(0.7, 1.5);
+  const sz = rand(0.7, 1.5);
+
+  for (let i = 0; i < arr.length; i += 3) {
+    arr[i] *= sx;
+    arr[i + 1] *= sy;
+    arr[i + 2] *= sz;
+  }
+
+  geometry.computeVertexNormals();
+
+  const normals = geometry.attributes.normal;
+  const bumpCount = 4 + Math.floor(Math.random() * 7);
+
+  for (let b = 0; b < bumpCount; b++) {
+    const i = Math.floor(Math.random() * position.count);
+
+    const center = new THREE.Vector3(
+      arr[i * 3],
+      arr[i * 3 + 1],
+      arr[i * 3 + 2]
+    );
+
+    const normal = new THREE.Vector3(
+      normals.getX(i),
+      normals.getY(i),
+      normals.getZ(i)
+    );
+
+    const roll = Math.random();
+    const radius = rand(0.3, 0.7);
+
+    if (roll < 0.5) {
+      const steps = Math.floor(rand(6, 14));
+
+      for (let k = 0; k < steps; k++) {
+        deformSurface(piece, center, normal, radius, 0.05, 'stretch');
+      }
+    } else if (roll < 0.75) {
+      const dir = normal.clone().negate();
+      const steps = Math.floor(rand(6, 12));
+
+      for (let k = 0; k < steps; k++) {
+        deformSurface(piece, center, dir, radius, 0.04, 'press');
+      }
+    } else {
+      const dir = normal
+        .clone()
+        .add(randomUnitVector().multiplyScalar(0.35))
+        .normalize();
+
+      const steps = Math.floor(rand(14, 30));
+
+      for (let k = 0; k < steps; k++) {
+        deformSurface(piece, center, dir, radius * 0.7, 0.05, 'stretch');
+
+        center.addScaledVector(dir, 0.045);
+        dir.add(randomUnitVector().multiplyScalar(0.12)).normalize();
+      }
+    }
+
+    geometry.computeVertexNormals();
+  }
+
+  smoothSurface(
+    piece,
+    new THREE.Vector3(),
+    20,
+    0.4,
+    1 + Math.floor(Math.random() * 3)
+  );
+
+  const q = new THREE.Quaternion().setFromEuler(
+    new THREE.Euler(rand(-0.5, 0.5), rand(0, Math.PI * 2), rand(-0.5, 0.5))
+  );
+
+  const v = new THREE.Vector3();
+
+  for (let i = 0; i < arr.length; i += 3) {
+    v.set(arr[i], arr[i + 1], arr[i + 2]).applyQuaternion(q);
+
+    arr[i] = v.x;
+    arr[i + 1] = v.y;
+    arr[i + 2] = v.z;
+  }
+
+  let maxR2 = 0;
+
+  for (let i = 0; i < arr.length; i += 3) {
+    const r2 = arr[i] * arr[i] + arr[i + 1] * arr[i + 1] + arr[i + 2] * arr[i + 2];
+    if (r2 > maxR2) maxR2 = r2;
+  }
+
+  const factor = Math.min(rand(0.9, 1.7), MAX_RADIUS) / Math.sqrt(maxR2);
+
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] *= factor;
+  }
+
+  position.needsUpdate = true;
+  geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+  geometry.computeBoundingBox();
+
+  const spot = findFreeSpot(piece);
+  const minY = geometry.boundingBox.min.y;
+  const restY = FLOOR_Y + FLOOR_GAP - minY;
+
+  mesh.position.set(spot.x, restY, spot.z);
+
+  mesh.scale.setScalar(0.001);
+  piece.anim = { start: performance.now(), dur: 450, minY, restY };
+
+  selectPiece(piece);
+  frameAllPieces();
+
+  showToast('Pieza generada al azar');
+  playShapeSound('random');
+}
+
+function updateSpawnAnimations() {
+  const now = performance.now();
+
+  for (const piece of pieces) {
+    const a = piece.anim;
+
+    if (!a) continue;
+
+    const t = Math.min(1, (now - a.start) / a.dur);
+    const c1 = 1.70158;
+    const c3 = c1 + 1;
+    const e = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    const s = Math.max(0.001, e);
+
+    piece.mesh.scale.setScalar(s);
+    piece.mesh.position.y = FLOOR_Y + FLOOR_GAP - a.minY * s;
+
+    if (t >= 1) {
+      piece.mesh.scale.setScalar(1);
+      piece.mesh.position.y = a.restY;
+      piece.anim = null;
+    }
+  }
+}
+
+function frameAllPieces() {
+  if (!pieces.length) return;
+
+  const box = new THREE.Box3();
+
+  pieces.forEach(p => {
+    p.mesh.geometry.computeBoundingBox();
+
+    box.union(
+      p.mesh.geometry.boundingBox.clone().translate(p.mesh.position)
+    );
+  });
+
+  const corners = [];
+
+  for (const x of [box.min.x, box.max.x]) {
+    for (const y of [box.min.y, box.max.y]) {
+      for (const z of [box.min.z, box.max.z]) {
+        corners.push(new THREE.Vector3(x, y, z));
+      }
+    }
+  }
+
+  const dir = camera.position.clone().sub(controls.target);
+  const startDist = dir.length();
+  dir.normalize();
+
+  const probe = camera.clone();
+
+  const fits = d => {
+    probe.position.copy(controls.target).addScaledVector(dir, d);
+    probe.lookAt(controls.target);
+    probe.updateMatrixWorld(true);
+
+    return corners.every(c => {
+      const p = c.clone().project(probe);
+      return Math.abs(p.x) < 0.9 && Math.abs(p.y) < 0.9 && p.z < 1;
+    });
+  };
+
+  let dist = startDist;
+
+  while (!fits(dist) && dist < controls.maxDistance) {
+    dist = Math.min(controls.maxDistance, dist * 1.06);
+  }
+
+  if (dist > startDist + 0.01) {
+    cameraAnim = {
+      from: camera.position.clone(),
+      to: controls.target.clone().addScaledVector(dir, dist),
+      start: performance.now(),
+      dur: 650
+    };
+  }
+}
+
+function saveHistory() {
+  history.push({
+    pieces: pieces.slice(),
+    selected: selectedPiece,
+    states: pieces.map(piece => ({
+      piece,
+      positions: new Float32Array(
+        piece.mesh.geometry.attributes.position.array
+      ),
+      pos: piece.mesh.position.clone()
+    }))
+  });
+
+  if (history.length > MAX_HISTORY) {
+    history.shift();
+  }
+}
+
+function undo() {
+  if (!history.length) {
+    showToast('No hay cambios para deshacer');
+    return;
+  }
+
+  const snap = history.pop();
+
+  for (const piece of pieces) {
+    if (!snap.pieces.includes(piece)) disposePiece(piece);
+  }
+
+  pieces = snap.pieces.slice();
+
+  for (const piece of pieces) {
+    if (!piece.mesh.parent) scene.add(piece.mesh);
+  }
+
+  for (const state of snap.states) {
+    const geometry = state.piece.mesh.geometry;
+    const position = geometry.attributes.position;
+
+    if (position.array.length === state.positions.length) {
+      position.array.set(state.positions);
+    }
+
+    position.needsUpdate = true;
+
+    geometry.computeVertexNormals();
+    geometry.computeBoundingSphere();
+    geometry.computeBoundingBox();
+
+    state.piece.mesh.position.copy(state.pos);
+  }
+
+  selectPiece(
+    pieces.includes(snap.selected)
+      ? snap.selected
+      : pieces[pieces.length - 1]
+  );
+
+  showToast('Último cambio deshecho');
+}
+
+function resetClay() {
+  stopToolSound();
+
+  sculpting = false;
+  activePointerId = null;
+  activePiece = null;
+  controls.enabled = true;
+
+  const toDispose = new Set(pieces);
+  history.forEach(snap => snap.pieces.forEach(p => toDispose.add(p)));
+  toDispose.forEach(disposePiece);
+
+  pieces = [];
+  selectedPiece = null;
+  history = [];
+
+  const first = createPiece('sphere', currentColor);
+  first.mesh.position.set(0, 0.12, 0);
+  selectPiece(first);
+
+  showToast('La plastilina ha vuelto a su forma inicial');
+}
+
+// --------------------------------------------------
+// CAPTURA Y VISTA PREVIA EN POLAROID
+// --------------------------------------------------
+
+function captureImage() {
+  renderer.render(scene, camera);
+  currentDataUrl = renderer.domElement.toDataURL('image/png');
+  
+  polaroidImg.src = currentDataUrl;
+  polaroidModal.classList.add('show');
+}
+
+function hideModal() {
+  polaroidModal.classList.remove('show');
+}
+
+function executeDownload() {
+  if (!currentDataUrl) return;
+
+  const link = document.createElement('a');
+  link.download = `esta-es-tu-vision-${new Date().toISOString().slice(0, 10)}.png`;
+  link.href = currentDataUrl;
+  link.click();
+
+  hideModal();
+  showToast('Imagen guardada');
+}
+
+function showToast(message) {
+  toastEl.textContent = message;
+  toastEl.classList.add('show');
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, 2200);
+}
+
+// --------------------------------------------------
+// SISTEMA DE SONIDO
+// --------------------------------------------------
+
+function ensureAudio() {
+  if (audioContext) return;
+
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+  const compressor = audioContext.createDynamicsCompressor();
+  masterGain = audioContext.createGain();
+  masterGain.gain.value = 0.9;
+
+  masterGain.connect(compressor);
+  compressor.connect(audioContext.destination);
+
+  const size = 2 * audioContext.sampleRate;
+  noiseBuffer = audioContext.createBuffer(1, size, audioContext.sampleRate);
+
+  const data = noiseBuffer.getChannelData(0);
+
+  for (let i = 0; i < size; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+}
+
+async function toggleSound() {
+  const button = document.querySelector('#soundBtn');
+
+  if (!soundEnabled) {
+    try {
+      ensureAudio();
+
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+      }
+
+      soundEnabled = true;
+
+      button.textContent = 'Activado';
+      button.classList.add('on');
+
+      showToast('Sonido activado');
+    } catch (error) {
+      showToast('Este navegador no pudo activar el sonido');
+    }
+  } else {
+    soundEnabled = false;
+
+    stopToolSound();
+
+    button.textContent = 'Activar';
+    button.classList.remove('on');
+  }
+}
+
+function createVoice(tool) {
+  const ctx = audioContext;
+
+  const out = ctx.createGain();
+  out.gain.value = 0.0001;
+  out.connect(masterGain);
+
+  const sources = [];
+
+  const osc = (type, freq) => {
+    const o = ctx.createOscillator();
+    o.type = type;
+    o.frequency.value = freq;
+    sources.push(o);
+    return o;
+  };
+
+  const noise = () => {
+    const n = ctx.createBufferSource();
+    n.buffer = noiseBuffer;
+    n.loop = true;
+    sources.push(n);
+    return n;
+  };
+
+  const gain = value => {
+    const g = ctx.createGain();
+    g.gain.value = value;
+    return g;
+  };
+
+  const filt = (type, freq, q) => {
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    f.Q.value = q;
+    return f;
+  };
+
+  const glide = (param, value, tc = 0.05) => {
+    param.setTargetAtTime(value, ctx.currentTime, tc);
+  };
+
+  const drive = level => {
+    const t = ctx.currentTime;
+
+    out.gain.cancelScheduledValues(t);
+    out.gain.setTargetAtTime(level, t, 0.04);
+    out.gain.setTargetAtTime(0.0001, t + 0.18, 0.1);
+  };
+
+  let update;
+
+  if (tool === 'press') {
+    const body = osc('triangle', 110);
+    const sub = osc('sine', 55);
+    const bodyGain = gain(0.8);
+    const wobble = osc('sine', 5.5);
+    const wobbleDepth = gain(0.3);
+
+    const squish = noise();
+    const squishFilter = filt('lowpass', 300, 1.5);
+    const squishGain = gain(0.0001);
+
+    wobble.connect(wobbleDepth);
+    wobbleDepth.connect(bodyGain.gain);
+
+    body.connect(bodyGain);
+    bodyGain.connect(out);
+    sub.connect(out);
+
+    squish.connect(squishFilter);
+    squishFilter.connect(squishGain);
+    squishGain.connect(out);
+
+    update = speed => {
+      glide(body.frequency, 100 + speed * 70);
+      glide(sub.frequency, 50 + speed * 35);
+      glide(squishFilter.frequency, 260 + speed * 500);
+      glide(squishGain.gain, 0.08 + speed * 0.4);
+      glide(wobble.frequency, 4 + speed * 6);
+      drive(0.05 + speed * 0.10);
+    };
+  } else if (tool === 'stretch') {
+    const a = osc('sawtooth', 200);
+    const b = osc('sawtooth', 202);
+    const vib = osc('sine', 6);
+    const vibDepth = gain(5);
+
+    const squeak = filt('bandpass', 900, 7);
+    const squeakGain = gain(0.5);
+
+    vib.connect(vibDepth);
+    vibDepth.connect(a.frequency);
+    vibDepth.connect(b.frequency);
+
+    a.connect(squeak);
+    b.connect(squeak);
+    squeak.connect(squeakGain);
+    squeakGain.connect(out);
+
+    update = speed => {
+      const f = 170 + speed * 520;
+
+      glide(a.frequency, f);
+      glide(b.frequency, f * 1.012);
+      glide(squeak.frequency, 600 + speed * 2200);
+      glide(vib.frequency, 5 + speed * 5);
+      drive(0.12 + speed * 0.20);
+    };
+  } else if (tool === 'smooth') {
+    const air = noise();
+    const airHigh = filt('highpass', 800, 0.7);
+    const airBand = filt('bandpass', 2400, 0.9);
+    const airGain = gain(0.0001);
+
+    const shimmerA = osc('sine', 1568);
+    const shimmerB = osc('sine', 2093);
+    const shimmerGain = gain(0.0001);
+
+    air.connect(airHigh);
+    airHigh.connect(airBand);
+    airBand.connect(airGain);
+    airGain.connect(out);
+
+    shimmerA.connect(shimmerGain);
+    shimmerB.connect(shimmerGain);
+    shimmerGain.connect(out);
+
+    update = speed => {
+      glide(airBand.frequency, 1500 + speed * 2800);
+      glide(airGain.gain, 0.15 + speed * 0.85);
+      glide(shimmerGain.gain, 0.005 + speed * 0.02);
+      drive(0.07 + speed * 0.12);
+    };
+  } else if (tool === 'move') {
+    const rumble = osc('square', 70);
+    const rumbleGain = gain(0.5);
+    const rumbleFilter = filt('lowpass', 200, 2);
+
+    const grit = noise();
+    const gritFilter = filt('bandpass', 600, 1.4);
+    const gritGain = gain(0.0001);
+
+    rumble.connect(rumbleFilter);
+    rumbleFilter.connect(rumbleGain);
+    rumbleGain.connect(out);
+
+    grit.connect(gritFilter);
+    gritFilter.connect(gritGain);
+    gritGain.connect(out);
+
+    update = speed => {
+      glide(rumble.frequency, 62 + speed * 55);
+      glide(rumbleFilter.frequency, 160 + speed * 340);
+      glide(gritFilter.frequency, 450 + speed * 900);
+      glide(gritGain.gain, 0.05 + speed * 0.35);
+      drive(0.08 + speed * 0.12);
+    };
+  } else if (tool === 'rotate') {
+    const a = osc('sine', 330);
+    const b = osc('sine', 336);
+    const aGain = gain(0.5);
+    const bGain = gain(0.5);
+
+    const wind = noise();
+    const windFilter = filt('bandpass', 900, 5);
+    const windGain = gain(0.0001);
+
+    const sweep = osc('sine', 3);
+    const sweepDepth = gain(120);
+
+    sweep.connect(sweepDepth);
+    sweepDepth.connect(windFilter.frequency);
+
+    a.connect(aGain);
+    b.connect(bGain);
+    aGain.connect(out);
+    bGain.connect(out);
+
+    wind.connect(windFilter);
+    windFilter.connect(windGain);
+    windGain.connect(out);
+
+    update = (speed, angle = 0) => {
+      const f = 330 + 150 * Math.sin(angle * 2);
+
+      glide(a.frequency, f, 0.03);
+      glide(b.frequency, f + 6, 0.03);
+      glide(windFilter.frequency, 700 + speed * 1800);
+      glide(windGain.gain, 0.05 + speed * 0.5);
+      glide(sweep.frequency, 2 + speed * 5);
+      drive(0.06 + speed * 0.10);
+    };
+  } else {
+    const root = osc('triangle', 220);
+    const fifth = osc('sine', 330);
+    const octave = osc('sine', 440);
+
+    const tremolo = osc('sine', 5);
+    const tremoloDepth = gain(3);
+
+    const rootGain = gain(0.6);
+    const fifthGain = gain(0.3);
+    const octaveGain = gain(0.2);
+
+    tremolo.connect(tremoloDepth);
+    tremoloDepth.connect(root.frequency);
+
+    root.connect(rootGain);
+    fifth.connect(fifthGain);
+    octave.connect(octaveGain);
+
+    rootGain.connect(out);
+    fifthGain.connect(out);
+    octaveGain.connect(out);
+
+    update = (speed, factor = 1) => {
+      const f = THREE.MathUtils.clamp(
+        220 * Math.pow(factor, 0.7),
+        110,
+        1320
+      );
+
+      glide(root.frequency, f, 0.03);
+      glide(fifth.frequency, f * 1.5, 0.03);
+      glide(octave.frequency, f * 2, 0.03);
+      drive(0.07 + speed * 0.12);
+    };
+  }
+
+  sources.forEach(source => source.start());
+
+  return { out, sources, update };
+}
+
+function startToolSound() {
+  if (!soundEnabled || !audioContext) return;
+
+  stopToolSound();
+
+  currentVoice = createVoice(activeTool);
+}
+
+function updateToolSound(speed, extra) {
+  if (!soundEnabled || !audioContext || !currentVoice) return;
+
+  currentVoice.update(speed, extra);
+}
+
+function stopToolSound() {
+  const voice = currentVoice;
+  currentVoice = null;
+
+  if (!voice || !audioContext) return;
+
+  const now = audioContext.currentTime;
+
+  voice.out.gain.cancelScheduledValues(now);
+  voice.out.gain.setTargetAtTime(0.0001, now, 0.05);
+
+  setTimeout(() => {
+    voice.sources.forEach(source => {
+      try { source.stop(); } catch {}
+    });
+
+    try { voice.out.disconnect(); } catch {}
+  }, 300);
+}
+
+function playShapeSound(type) {
+  if (!soundEnabled || !audioContext) return;
+
+  const ctx = audioContext;
+  const t0 = ctx.currentTime + 0.01;
+
+  const tone = (wave, f0, f1, start, dur, vol) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+
+    o.type = wave;
+    o.frequency.setValueAtTime(f0, t0 + start);
+
+    if (f1 !== f0) {
+      o.frequency.exponentialRampToValueAtTime(f1, t0 + start + dur);
+    }
+
+    g.gain.setValueAtTime(0.0001, t0 + start);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + start + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + start + dur);
+
+    o.connect(g);
+    g.connect(masterGain);
+
+    o.start(t0 + start);
+    o.stop(t0 + start + dur + 0.05);
+  };
+
+  const click = (start, freq, dur, vol) => {
+    const n = ctx.createBufferSource();
+    const f = ctx.createBiquadFilter();
+    const g = ctx.createGain();
+
+    n.buffer = noiseBuffer;
+
+    f.type = 'bandpass';
+    f.frequency.value = freq;
+    f.Q.value = 3;
+
+    g.gain.setValueAtTime(vol, t0 + start);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + start + dur);
+
+    n.connect(f);
+    f.connect(g);
+    g.connect(masterGain);
+
+    n.start(t0 + start, Math.random(), dur + 0.05);
+  };
+
+  if (type === 'random') {
+    for (let i = 0; i < 7; i++) {
+      click(i * 0.028 + Math.random() * 0.012, rand(1500, 3200), 0.025, rand(0.12, 0.22));
+    }
+
+    const root = pick([262, 294, 330, 392, 440]);
+    const ratios = [1, 9 / 8, 5 / 4, 3 / 2, 5 / 3, 2, 9 / 4];
+
+    const chosen = [0, 1, 2, 3, 4, 5, 6]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 4)
+      .sort((a, b) => a - b);
+
+    chosen.forEach((index, i) => {
+      const f = root * ratios[index];
+      const last = i === chosen.length - 1;
+
+      tone(last ? 'sine' : 'triangle', f, f, 0.2 + i * 0.075, last ? 0.5 : 0.18, 0.16);
+    });
+  } else if (type === 'delete') {
+    tone('sine', 800, 90, 0, 0.28, 0.22);
+    tone('triangle', 400, 60, 0.02, 0.22, 0.10);
+    click(0, 900, 0.12, 0.20);
+  } else if (type === 'sphere') {
+    tone('sine', 220, 620, 0, 0.22, 0.22);
+    tone('sine', 440, 1240, 0, 0.14, 0.06);
+  } else if (type === 'cube') {
+    click(0, 1800, 0.03, 0.25);
+    tone('triangle', 196, 150, 0, 0.12, 0.30);
+    click(0.11, 2200, 0.03, 0.20);
+    tone('triangle', 262, 200, 0.11, 0.14, 0.28);
+  } else if (type === 'rect') {
+    tone('sine', 110, 98, 0, 0.6, 0.30);
+    tone('triangle', 165, 150, 0, 0.4, 0.12);
+    tone('sine', 220, 220, 0.14, 0.5, 0.14);
+  } else if (type === 'triangle') {
+    tone('sine', 1319, 1319, 0, 0.7, 0.14);
+    tone('sine', 1976, 1976, 0, 0.55, 0.08);
+    tone('sine', 2637, 2637, 0, 0.35, 0.05);
+    click(0, 6000, 0.02, 0.08);
+  }
+}
+</script>
+</body>
+</html>
